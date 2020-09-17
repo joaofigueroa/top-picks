@@ -1,60 +1,33 @@
 <template>
-  <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-main>
-      <HelloWorld/>
-    </v-main>
-  </v-app>
+	<v-app>
+		<div v-if="isUserLoggedIn">
+			<AppBar></AppBar>
+		</div>
+		<v-container class="ma-0 pa-0">
+			<v-main>
+				<router-view></router-view>
+			</v-main>
+		</v-container>
+	</v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
-
+import { isAuthenticated } from "./vue-apollo"
+import AppBar from "@/components/Navigation/AppBar"
 export default {
-  name: 'App',
+	name: "App",
 
-  components: {
-    HelloWorld,
-  },
+	components: {
+		AppBar,
+	},
 
-  data: () => ({
-    //
-  }),
-};
+	data: () => ({
+		//
+	}),
+	computed: {
+		isUserLoggedIn() {
+			return isAuthenticated()
+		},
+	},
+}
 </script>
