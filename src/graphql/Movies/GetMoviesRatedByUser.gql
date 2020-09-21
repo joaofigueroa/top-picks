@@ -1,0 +1,14 @@
+#import "./MovieFragment.gql"
+
+query GetMoviesRatedByUser($userId: ID!) {
+	User(userId: $userId) {
+		name
+		RATED_rel {
+			rating
+			timestamp
+			Movie {
+				...movie
+			}
+		}
+	}
+}

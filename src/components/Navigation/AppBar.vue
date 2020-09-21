@@ -59,6 +59,7 @@
 			outlined
 			rounded
 			dense
+			v-model="search"
 			color="white"
 			style="border-color: white !important"
 			class="d-flex justify-start"
@@ -100,6 +101,16 @@
 import { onLogout } from "@/vue-apollo"
 
 export default {
+	data: () => ({
+		search: "",
+	}),
+
+	watch: {
+		search: function() {
+			this.$store.commit("setSearch", this.search)
+		},
+	},
+
 	methods: {
 		logout() {
 			onLogout(this.$apollo.provider.defaultClient)

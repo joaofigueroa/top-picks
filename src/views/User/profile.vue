@@ -42,11 +42,24 @@
 							<v-row class=" mx-2 d-flex justify-center">
 								<v-col cols="12">
 									<v-alert text type="success" v-model="userUpdatedAlert">
-										User Updated!
+										{{ userFeedback }}
 									</v-alert>
 								</v-col>
 								<v-col cols="6">
-									<v-btn @click="emitChangeCard()" outlined small color="red">Delete Account</v-btn>
+									<ApolloMutation
+										:mutation="require('@/graphql/User/DeleteUser.gql')"
+										:variables="{
+											userId,
+										}"
+										@done="showUserUpdatedAlert"
+									>
+										<template v-slot="{ mutate, loading, error }">
+											<v-btn :loading="loading" @click.native="mutate" outlined small color="red">
+												Delete Account
+											</v-btn>
+											<p v-if="error">Ocorreu um erro: {{ error }}</p>
+										</template>
+									</ApolloMutation>
 								</v-col>
 								<v-col cols="6">
 									<ApolloMutation
@@ -89,6 +102,7 @@ export default {
 		userId: "",
 		name: "",
 		userUpdatedAlert: false,
+		userFeedback: "",
 	}),
 
 	mounted() {
@@ -97,11 +111,24 @@ export default {
 
 	methods: {
 		showUserUpdatedAlert() {
+			this.userFeedback = "User Updated"
 			this.userUpdatedAlert = true
 
 			setTimeout(() => {
 				this.userUpdatedAlert = false
 			}, 3000)
+		},
+		showUserDeletedAlert() {
+			this.userUpdatedAlert = true
+			this.userFeedback = "User Deleted"
+
+			setTimeout(() => {
+				this.logout()
+			}, 3000)
+		},
+		logout() {
+			onLogout(this.$apollo.provider.defaultClient)
+			location.reload()
 		},
 	},
 }

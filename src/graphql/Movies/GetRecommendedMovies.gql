@@ -1,0 +1,8 @@
+query GetRecommendedMovies($userId: ID!) {
+	User(userId: $userId) {
+		recommendedMovies(orderBy: title_asc) {
+			title
+			year
+		}
+	}
+}

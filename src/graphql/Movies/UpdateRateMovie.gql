@@ -1,0 +1,9 @@
+mutation UpdateRateMovie($userId: ID!, $movieId: ID!, $rating: Float!, $timestamp: Int!) {
+	UpdateUserRATED_rel(
+		from: { userId: $userId }
+		to: { movieId: $movieId }
+		data: { rating: $rating, timestamp: $timestamp }
+	) {
+		rating
+	}
+}

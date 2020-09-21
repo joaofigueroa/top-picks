@@ -1,14 +1,12 @@
 <template>
 	<v-hover v-slot:default="{ hover }">
-		<v-card
-			@click.native="$router.push('/detalhes-filme/' + movie.title)"
-			:elevation="hover ? 12 : 2"
-			width="320"
-		>
+		<v-card :elevation="hover ? 12 : 2" width="450">
 			<v-row>
 				<v-col cols="12">
 					<v-img
-						lazy-src="https://cdn.vuetifyjs.com/images/parallax/material2.jpg"
+						style="cursor: pointer !important;"
+						@click.native="$router.push('/detalhes-filme/' + movie.title)"
+						:lazy-src="movie.poster"
 						height="250"
 						contain
 						:src="movie.poster"
@@ -28,7 +26,7 @@
 						<v-layout row-wrap v-show="hover">
 							<v-rating
 								v-model="rating"
-								color="yellow darken-3"
+								:color="starColor"
 								background-color="grey darken-1"
 								empty-icon="$ratingFull"
 								half-increments
@@ -50,11 +48,74 @@ export default {
 	components: {},
 
 	data: () => ({
+		initialRated: false,
 		rating: undefined,
+		userId: "",
+		movieId: "",
+		timestamp: "",
+		starColor: "yellow darken-3",
+		moviesRatedByUser: [],
+		movieRatedByUser: false,
 	}),
+
+	watch: {
+		rating: function() {
+			if (this.initialRated) this.mutateMovieRating()
+		},
+	},
 
 	mounted() {
 		this.rating = (5 * this.movie.imdbRating) / 10
+		this.movieId = this.movie.movieId
+
+		this.queryUserRatings()
+	},
+
+	methods: {
+		mutateMovieRating() {
+			this.starColor = "blue darken-3"
+			this.$apollo
+				.mutate({
+					mutation: this.movieRatedByUser
+						? require("@/graphql/Movies/UpdateRateMovie.gql")
+						: require("@/graphql/Movies/RateMovie.gql"),
+					variables: {
+						userId: localStorage.getItem("apollo-token"),
+						movieId: this.movieId,
+						rating: this.rating,
+						timestamp: Math.round(new Date().getTime() / 1000),
+					},
+				})
+				.then(data => {
+					// Result
+					this.movieRatedByUser = true
+				})
+		},
+		queryUserRatings() {
+			this.$apollo
+				.query({
+					query: require("@/graphql/Movies/GetMoviesRatedByUser.gql"),
+					variables: { userId: localStorage.getItem("apollo-token") },
+				})
+				.then(data => {
+					this.moviesRatedByUser = data.data.User[0].RATED_rel
+
+					this.checkMovieAlreadyRated()
+				})
+		},
+
+		checkMovieAlreadyRated() {
+			this.moviesRatedByUser.forEach(movieAlreadyRated => {
+				if (movieAlreadyRated.Movie.movieId == this.movie.movieId) {
+					this.starColor = "blue darken-3"
+					this.rating = movieAlreadyRated.rating
+					this.movieRatedByUser = true
+				}
+			})
+			setTimeout(() => {
+				this.initialRated = true
+			}, 0)
+		},
 	},
 }
 </script>

@@ -69,9 +69,6 @@ export default {
 
 		saveToken(result) {
 			const token = result.data[0].userId
-			console.log("token", token)
-			//localStorage.setItem("apollo-token", token)
-			console.log("Wondering", result)
 			onLogin(this.$apollo.provider.defaultClient, token)
 			location.reload()
 		},
