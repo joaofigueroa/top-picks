@@ -1,0 +1,9 @@
+#import "./MovieFragment.gql"
+
+query GetMoviesByGenre($name: String!) {
+	Genre(name: $name) {
+		movies(orderBy: title_asc, first: 40) {
+			...movie
+		}
+	}
+}

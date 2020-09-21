@@ -1,0 +1,10 @@
+#import "./MovieFragment.gql"
+{
+	Genre(orderBy: name_asc) {
+		name
+
+		movies(orderBy: title_asc, first: 4) {
+			...movie
+		}
+	}
+}

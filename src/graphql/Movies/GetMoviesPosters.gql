@@ -1,0 +1,5 @@
+query {
+	Movie(first: 100) {
+		poster
+	}
+}

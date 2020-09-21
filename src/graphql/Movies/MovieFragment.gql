@@ -1,0 +1,19 @@
+fragment movie on Movie {
+	budget
+	countries
+	imdbId
+	imdbRating
+	imdbVotes
+	languages
+	movieId
+	plot
+	poster
+	released
+	revenue
+	runtime
+	title
+	tmdbId
+	url
+	year
+	_id
+}

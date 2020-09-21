@@ -1,0 +1,10 @@
+#import "./MovieFragment.gql"
+
+query GetMovieDetailed($title: String!) {
+	Movie(title: $title) {
+		...movie
+		similarMovies(limit: 5) {
+			...movie
+		}
+	}
+}
