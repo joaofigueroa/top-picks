@@ -4,6 +4,9 @@
 			<v-col cols="12">
 				<ApolloQuery
 					v-if="search.length == 0"
+					:variables="{
+						userId,
+					}"
 					:query="require('@/graphql/Movies/GetRecommendedMovies.gql')"
 				>
 					<template v-slot="{ result: { loading, error, data } }">
@@ -13,19 +16,29 @@
 						<div v-else-if="error" class="error apollo">Um erro ocorreu :(</div>
 						<div v-else-if="data" class=" result apollo">
 							<v-row>
-								<span
-									@click="$router.push('/filmes-genero/' + genre.name)"
-									style=" font-size:30px; color: #2C6796 "
-								>
-									Recommended Movies
-								</span>
-								<v-divider
-									style="  border-color: #2C6796 !important; width:205px !important;"
-									class=""
-								></v-divider>
-								<v-row>
+								<v-col cols="12">
+									<span
+										style="cursor: pointer !important; font-weight: 700 !important; font-size:30px; color: #2C6796 "
+									>
+										Recommended Movies
+									</span>
+									<v-divider
+										style="  border-color: #2C6796 !important; width:80% !important;"
+										class=""
+									></v-divider>
+								</v-col>
+								<v-row v-if="data.movies">
 									<v-col v-for="movie in data.movies" :key="movie.id" cols="3">
 										<MovieCard :movie="movie"></MovieCard>
+									</v-col>
+								</v-row>
+								<v-row v-else>
+									<v-col class="mx-2 text-start" cols="12">
+										<span
+											style="cursor: pointer !important; font-weight: 300 !important; font-size:18px; color: #2C6796 "
+										>
+											Start rating movies to get recommendations...
+										</span>
 									</v-col>
 								</v-row>
 							</v-row>
@@ -129,7 +142,10 @@ export default {
 		MovieCard,
 	},
 
-	data: () => ({}),
+	data: () => ({
+		userId: localStorage.getItem("apollo-token"),
+	}),
+	mounted() {},
 
 	computed: {
 		search() {
