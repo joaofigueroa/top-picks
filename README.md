@@ -2,7 +2,7 @@
 
 # abstract 
 
-Simple plataform develloped aiming to learn GraphQL and Apollo. This project uses the [Vue.js](https://www.vuejs.org) framework and  [Apollo](https://apollo.vuejs.org/guide/.
+Simple plataform develloped aiming to learn GraphQL and Apollo. This project uses the [Vue.js](https://www.vuejs.org) framework and  [Apollo](https://apollo.vuejs.org/guide/).
 
 # Let´s get it running
 
