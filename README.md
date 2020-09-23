@@ -6,4 +6,4 @@ Simple plataform develloped aiming to learn GraphQL and Apollo. This project use
 
 # Let´s get it running
 
-Navigate to the folder where you´ve cloned simply run `npm install` in your Terminal. Done installing the dependencies? All you have to do now is run `npm run serve` and you´re ready to go. Enjoy.
+Navigate to the folder where you´ve cloned the project and simply run `npm install` in your Terminal. Done installing the dependencies? All you have to do now is run `npm run serve` and you´re ready to go. Enjoy.
