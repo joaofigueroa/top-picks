@@ -3,7 +3,7 @@
 	Genre(orderBy: name_asc) {
 		name
 
-		movies(orderBy: title_asc, first: 4) {
+		movies(orderBy: year_desc, first: 8) {
 			...movie
 		}
 	}

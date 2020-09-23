@@ -51,7 +51,7 @@
 										:variables="{
 											userId,
 										}"
-										@done="showUserUpdatedAlert"
+										@done="showUserDeletedAlert"
 									>
 										<template v-slot="{ mutate, loading, error }">
 											<v-btn :loading="loading" @click.native="mutate" outlined small color="red">
@@ -90,13 +90,14 @@
 						</v-card-actions>
 					</v-card>
 
-					<p v-if="error">Errpr: {{ error }}</p>
+					<p v-if="error">Error: {{ error }}</p>
 				</template>
 			</ApolloQuery>
 		</v-col>
 	</v-row>
 </template>
 <script>
+import { onLogout } from "@/vue-apollo"
 export default {
 	data: () => ({
 		userId: "",

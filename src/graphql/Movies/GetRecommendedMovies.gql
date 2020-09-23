@@ -1,8 +1,10 @@
 query GetRecommendedMovies($userId: ID!) {
 	User(userId: $userId) {
-		recommendedMovies(orderBy: title_asc, limit: 4) {
+		recommendedMovies(orderBy: year_desc, limit: 8) {
 			title
 			year
+			poster
+			imdbRating
 		}
 	}
 }

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Register from '@/views/User/register'
 import Profile from '@/views/User/profile'
-import Home from '@/views/home'
+import Home from '@/views/Home'
 import MovieDetailed from '@/views/Movies/movieDetailed'
 import MovieByGenre from '@/views/Movies/movieByGenre'
 

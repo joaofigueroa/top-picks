@@ -6,4 +6,12 @@ mutation rateMovie($userId: ID!, $movieId: ID!, $rating: Float!, $timestamp: Int
 	) {
 		rating
 	}
+
+	MergeUserRATED_rel(
+		from: { userId: $userId }
+		to: { movieId: $movieId }
+		data: { rating: $rating, timestamp: $timestamp }
+	) {
+		rating
+	}
 }

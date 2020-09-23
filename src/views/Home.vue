@@ -27,9 +27,27 @@
 										class=""
 									></v-divider>
 								</v-col>
-								<v-row v-if="data.movies">
-									<v-col v-for="movie in data.movies" :key="movie.id" cols="3">
-										<MovieCard :movie="movie"></MovieCard>
+
+								<v-row v-if="data.User[0].recommendedMovies.length">
+									<v-col cols="12">
+										<v-sheet class=" ma-2" elevation="0">
+											<v-slide-group v-model="slide" class="" show-arrows>
+												<v-slide-item
+													v-for="movie in data.User[0].recommendedMovies"
+													:key="movie.id"
+													v-slot:default="{ active, toggle }"
+												>
+													<MovieCard
+														width="100"
+														class="ma-2"
+														:color="active ? 'primary' : 'grey lighten-1'"
+														:key="movie.id"
+														@click="toggle"
+														:movie="movie"
+													></MovieCard>
+												</v-slide-item>
+											</v-slide-group>
+										</v-sheet>
 									</v-col>
 								</v-row>
 								<v-row v-else>
@@ -72,8 +90,25 @@
 										class=""
 									></v-divider>
 									<v-row v-if="genre.name != '(no genres listed)'">
-										<v-col v-for="movie in genre.movies" :key="movie.id" cols="3">
-											<MovieCard :movie="movie"></MovieCard>
+										<v-col cols="12">
+											<v-sheet class=" ma-2" elevation="0">
+												<v-slide-group v-model="slide" class="" show-arrows>
+													<v-slide-item
+														v-for="movie in genre.movies"
+														:key="movie.id"
+														v-slot:default="{ active, toggle }"
+													>
+														<MovieCard
+															width="100"
+															class="ma-2"
+															:color="active ? 'primary' : 'grey lighten-1'"
+															:key="movie.id"
+															@click="toggle"
+															:movie="movie"
+														></MovieCard>
+													</v-slide-item>
+												</v-slide-group>
+											</v-sheet>
 										</v-col>
 									</v-row>
 								</v-col>
@@ -104,15 +139,28 @@
 						<div v-else-if="error" class="error apollo">Um erro ocorreu :(</div>
 						<div v-else-if="data" class=" result apollo">
 							<v-row>
-								<v-col v-for="movie in data.Movie" :key="movie.id" cols="12">
-									<v-row>
-										<v-col cols="3">
-											<MovieCard :movie="movie"></MovieCard>
-										</v-col>
-									</v-row>
+								<v-col cols="12">
+									<v-sheet class=" ma-2" elevation="0">
+										<v-slide-group v-model="slide" class="" show-arrows>
+											<v-slide-item
+												v-for="movie in data.Movie"
+												:key="movie.id"
+												v-slot:default="{ active, toggle }"
+											>
+												<MovieCard
+													width="100"
+													class="ma-2"
+													:color="active ? 'primary' : 'grey lighten-1'"
+													:key="movie.id"
+													@click="toggle"
+													:movie="movie"
+												></MovieCard>
+											</v-slide-item>
+										</v-slide-group>
+									</v-sheet>
 								</v-col>
 							</v-row>
-							<v-row v-if="data.Movie[0]" align="center" justify="center">
+							<v-row v-if="data.Movie" align="center" justify="center">
 								<v-col cols="12">
 									<span style="font-weight: 700 !important; font-size:45px; color: #2C6796 ">
 										Similar Movies
@@ -123,8 +171,25 @@
 									></v-divider>
 								</v-col>
 
-								<v-col v-for="movie in data.Movie[0].similarMovies" :key="movie.id" cols="2">
-									<MovieCard :movie="movie"></MovieCard>
+								<v-col cols="12">
+									<v-sheet class=" ma-2" elevation="0">
+										<v-slide-group v-model="slide" class="" show-arrows>
+											<v-slide-item
+												v-for="movie in data.Movie[0].similarMovies"
+												:key="movie.id"
+												v-slot:default="{ active, toggle }"
+											>
+												<MovieCard
+													width="100"
+													class="ma-2"
+													:color="active ? 'primary' : 'grey lighten-1'"
+													:key="movie.id"
+													@click="toggle"
+													:movie="movie"
+												></MovieCard>
+											</v-slide-item>
+										</v-slide-group>
+									</v-sheet>
 								</v-col>
 							</v-row>
 						</div>
@@ -144,6 +209,7 @@ export default {
 
 	data: () => ({
 		userId: localStorage.getItem("apollo-token"),
+		slide: null,
 	}),
 	mounted() {},
 

@@ -26,12 +26,15 @@
 									></v-divider>
 								</v-col>
 
-								<v-col v-for="movie in data.Genre[0].movies" :key="movie.id" cols="3">
+								<v-col v-for="movie in data.Genre[0].movies" :key="movie.id" cols="6" md="3">
 									<MovieCard :movie="movie"></MovieCard>
 								</v-col>
 							</v-row>
 						</div>
-						<div v-else class="no-result apollo">Nenhuma informação encontrada :(</div>
+						<!-- Loading not working -->
+						<div v-else class="no-result apollo">
+							<v-progress-circular indeterminate color="black"></v-progress-circular>
+						</div>
 					</template>
 				</ApolloQuery>
 				<ApolloQuery

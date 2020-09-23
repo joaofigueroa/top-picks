@@ -1,7 +1,7 @@
 #import "./MovieFragment.gql"
 
 query GetMovie($title: String!) {
-	Movie(title: $title) {
+	Movie(filter: { title_contains: $title }) {
 		...movie
 		similarMovies(limit: 5) {
 			...movie

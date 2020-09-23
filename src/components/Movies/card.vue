@@ -1,6 +1,6 @@
 <template>
 	<v-hover v-slot:default="{ hover }">
-		<v-card :elevation="hover ? 12 : 2" width="450">
+		<v-card :elevation="hover ? 12 : 2" width="250">
 			<v-row>
 				<v-col cols="12">
 					<v-img
@@ -25,6 +25,7 @@
 					<v-expand-transition>
 						<v-layout row-wrap v-show="hover">
 							<v-rating
+								:key="movie.movieId"
 								v-model="rating"
 								:color="starColor"
 								background-color="grey darken-1"
@@ -40,6 +41,7 @@
 	</v-hover>
 </template>
 <script>
+const GET_RATED_MOVIES = require("@/graphql/Movies/GetMoviesRatedByUser.gql")
 export default {
 	name: "MovieCard",
 
@@ -50,12 +52,13 @@ export default {
 	data: () => ({
 		initialRated: false,
 		rating: undefined,
-		userId: "",
+		userId: localStorage.getItem("apollo-token"),
 		movieId: "",
 		timestamp: "",
 		starColor: "yellow darken-3",
 		moviesRatedByUser: [],
 		movieRatedByUser: false,
+		mobileDevice: screen.width < 450 ? true : false,
 	}),
 
 	watch: {
@@ -69,9 +72,14 @@ export default {
 		this.movieId = this.movie.movieId
 
 		this.queryUserRatings()
+		window.addEventListener("resize", this.checkScreenResize)
 	},
 
 	methods: {
+		checkScreenResize() {
+			if (screen.width < 450) this.mobileDevice = true
+			else this.mobileDevice = false
+		},
 		mutateMovieRating() {
 			this.starColor = "blue darken-3"
 			this.$apollo
@@ -85,6 +93,7 @@ export default {
 						rating: this.rating,
 						timestamp: Math.round(new Date().getTime() / 1000),
 					},
+					update: this.updateCache,
 				})
 				.then(data => {
 					// Result
@@ -99,9 +108,20 @@ export default {
 				})
 				.then(data => {
 					this.moviesRatedByUser = data.data.User[0].RATED_rel
-
 					this.checkMovieAlreadyRated()
 				})
+		},
+		updateCache(store, { data: { MergeUserRATED_rel } }) {
+			const query = {
+				query: GET_RATED_MOVIES,
+				variables: { userId: localStorage.getItem("apollo-token") },
+			}
+			const data = store.readQuery(query)
+			data.User[0].RATED_rel.push({ ...MergeUserRATED_rel.from })
+			store.writeQuery({
+				...query,
+				data,
+			})
 		},
 
 		checkMovieAlreadyRated() {

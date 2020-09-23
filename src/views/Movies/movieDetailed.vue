@@ -1,5 +1,6 @@
 <template>
 	<ApolloQuery
+		:key="$route.params.name"
 		:variables="{
 			title: $route.params.name,
 		}"
@@ -22,13 +23,14 @@
 							class=""
 						></v-divider>
 					</v-col>
-					<v-col cols="6">
+					<v-col class="mx-1 " cols="12" md="5">
 						<v-img contain height="650px" :src="data.Movie[0].poster"></v-img>
 					</v-col>
-					<v-col class=" mt-6" cols="6">
+					<v-col class="mx-1  mt-6" cols="12" sm="5">
 						<v-row>
 							<v-col cols="12">
 								<v-rating
+									:key="$route.params.name"
 									class="ml-n3"
 									large
 									v-model="rating"
@@ -109,8 +111,25 @@
 						></v-divider>
 					</v-col>
 					<v-row align="center" justify="center">
-						<v-col v-for="movie in data.Movie[0].similarMovies" :key="movie.id" cols="2">
-							<MovieCard :movie="movie"></MovieCard>
+						<v-col cols="12">
+							<v-sheet class="mx-auto" elevation="0">
+								<v-slide-group v-model="slide" class="pa-2" show-arrows>
+									<v-slide-item
+										v-for="movie in data.Movie[0].similarMovies"
+										:key="movie.id"
+										v-slot:default="{ active, toggle }"
+									>
+										<MovieCard
+											width="100"
+											class="ma-2"
+											:color="active ? 'primary' : 'grey lighten-1'"
+											:key="movie.id"
+											@click="toggle"
+											:movie="movie"
+										></MovieCard>
+									</v-slide-item>
+								</v-slide-group>
+							</v-sheet>
 						</v-col>
 					</v-row>
 				</v-row>
@@ -121,6 +140,7 @@
 </template>
 <script>
 import MovieCard from "@/components/Movies/card"
+const GET_RATED_MOVIES = require("@/graphql/Movies/GetMoviesRatedByUser.gql")
 export default {
 	name: "MovieDetailed",
 
@@ -130,6 +150,7 @@ export default {
 		initialRated: false,
 		movieRatedByUser: false,
 		starColor: "yellow darken-3",
+		slide: null,
 	}),
 	components: {
 		MovieCard,
@@ -161,6 +182,7 @@ export default {
 						rating: this.rating,
 						timestamp: Math.round(new Date().getTime() / 1000),
 					},
+					update: this.updateCache,
 				})
 				.then(data => {
 					// Result
@@ -175,7 +197,7 @@ export default {
 				})
 				.then(data => {
 					this.moviesRatedByUser = data.data.User[0].RATED_rel
-					console.log(this.moviesRatedByUser)
+
 					this.checkMovieAlreadyRated()
 				})
 		},
@@ -191,6 +213,18 @@ export default {
 			setTimeout(() => {
 				this.initialRated = true
 			}, 0)
+		},
+		updateCache(store, { data: { MergeUserRATED_rel } }) {
+			const query = {
+				query: GET_RATED_MOVIES,
+				variables: { userId: localStorage.getItem("apollo-token") },
+			}
+			const data = store.readQuery(query)
+			data.User[0].RATED_rel.push({ ...MergeUserRATED_rel.from })
+			store.writeQuery({
+				...query,
+				data,
+			})
 		},
 	},
 }
