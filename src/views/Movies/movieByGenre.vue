@@ -77,8 +77,25 @@
 									></v-divider>
 								</v-col>
 
-								<v-col v-for="movie in data.Movie[0].similarMovies" :key="movie.id" cols="2">
-									<MovieCard :movie="movie"></MovieCard>
+								<v-col cols="12">
+									<v-sheet class=" ma-2" elevation="0">
+										<v-slide-group v-model="slide" class="" show-arrows>
+											<v-slide-item
+												v-for="movie in data.Movie[0].similarMovies"
+												:key="movie.id"
+												v-slot:default="{ active, toggle }"
+											>
+												<MovieCard
+													width="100"
+													class="ma-2"
+													:color="active ? 'primary' : 'grey lighten-1'"
+													:key="movie.id"
+													@click="toggle"
+													:movie="movie"
+												></MovieCard>
+											</v-slide-item>
+										</v-slide-group>
+									</v-sheet>
 								</v-col>
 							</v-row>
 						</div>

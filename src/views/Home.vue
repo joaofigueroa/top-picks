@@ -15,7 +15,7 @@
 						</div>
 						<div v-else-if="error" class="error apollo">Um erro ocorreu :(</div>
 						<div v-else-if="data" class=" result apollo">
-							<v-row>
+							<v-row v-if="data.User[0].recommendedMovies.length">
 								<v-col cols="12">
 									<span
 										style="cursor: pointer !important; font-weight: 700 !important; font-size:30px; color: #2C6796 "
@@ -27,38 +27,35 @@
 										class=""
 									></v-divider>
 								</v-col>
-
-								<v-row v-if="data.User[0].recommendedMovies.length">
-									<v-col cols="12">
-										<v-sheet class=" ma-2" elevation="0">
-											<v-slide-group v-model="slide" class="" show-arrows>
-												<v-slide-item
-													v-for="movie in data.User[0].recommendedMovies"
+								<v-col cols="12">
+									<v-sheet class="" elevation="0">
+										<v-slide-group v-model="slide" show-arrows>
+											<v-slide-item
+												v-for="movie in data.User[0].recommendedMovies"
+												:key="movie.id"
+												v-slot:default="{ active, toggle }"
+											>
+												<MovieCard
+													width="100"
+													class="ma-2"
+													:color="active ? 'primary' : 'grey lighten-1'"
 													:key="movie.id"
-													v-slot:default="{ active, toggle }"
-												>
-													<MovieCard
-														width="100"
-														class="ma-2"
-														:color="active ? 'primary' : 'grey lighten-1'"
-														:key="movie.id"
-														@click="toggle"
-														:movie="movie"
-													></MovieCard>
-												</v-slide-item>
-											</v-slide-group>
-										</v-sheet>
-									</v-col>
-								</v-row>
-								<v-row v-else>
-									<v-col class="mx-2 text-start" cols="12">
-										<span
-											style="cursor: pointer !important; font-weight: 300 !important; font-size:18px; color: #2C6796 "
-										>
-											Start rating movies to get recommendations...
-										</span>
-									</v-col>
-								</v-row>
+													@click="toggle"
+													:movie="movie"
+												></MovieCard>
+											</v-slide-item>
+										</v-slide-group>
+									</v-sheet>
+								</v-col>
+							</v-row>
+							<v-row v-else>
+								<v-col class="mx-2 text-start" cols="12">
+									<span
+										style="cursor: pointer !important; font-weight: 300 !important; font-size:18px; color: #2C6796 "
+									>
+										Start rating movies to get recommendations...
+									</span>
+								</v-col>
 							</v-row>
 						</div>
 						<div v-else class="no-result apollo">Nenhuma informação encontrada :(</div>
@@ -210,6 +207,7 @@ export default {
 	data: () => ({
 		userId: localStorage.getItem("apollo-token"),
 		slide: null,
+		slide2: null,
 	}),
 	mounted() {},
 

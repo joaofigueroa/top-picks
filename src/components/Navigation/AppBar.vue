@@ -55,7 +55,7 @@
 		<v-spacer></v-spacer>
 
 		<v-text-field
-			v-if="!$route.path.includes('perfil')"
+			v-if="$route.path.includes('home') || $route.path.includes('genero')"
 			outlined
 			rounded
 			dense

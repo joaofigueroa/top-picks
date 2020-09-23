@@ -110,28 +110,27 @@
 							class=""
 						></v-divider>
 					</v-col>
-					<v-row align="center" justify="center">
-						<v-col cols="12">
-							<v-sheet class="mx-auto" elevation="0">
-								<v-slide-group v-model="slide" class="pa-2" show-arrows>
-									<v-slide-item
-										v-for="movie in data.Movie[0].similarMovies"
+
+					<v-col cols="12">
+						<v-sheet class="mx-auto" elevation="0">
+							<v-slide-group v-model="slide" class="pa-2" show-arrows>
+								<v-slide-item
+									v-for="movie in data.Movie[0].similarMovies"
+									:key="movie.id"
+									v-slot:default="{ active, toggle }"
+								>
+									<MovieCard
+										width="100"
+										class="ma-2"
+										:color="active ? 'primary' : 'grey lighten-1'"
 										:key="movie.id"
-										v-slot:default="{ active, toggle }"
-									>
-										<MovieCard
-											width="100"
-											class="ma-2"
-											:color="active ? 'primary' : 'grey lighten-1'"
-											:key="movie.id"
-											@click="toggle"
-											:movie="movie"
-										></MovieCard>
-									</v-slide-item>
-								</v-slide-group>
-							</v-sheet>
-						</v-col>
-					</v-row>
+										@click="toggle"
+										:movie="movie"
+									></MovieCard>
+								</v-slide-item>
+							</v-slide-group>
+						</v-sheet>
+					</v-col>
 				</v-row>
 			</div>
 			<div v-else class="no-result apollo">Nenhuma informação encontrada :(</div>
