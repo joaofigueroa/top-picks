@@ -140,9 +140,9 @@ export default {
 		},
 		options() {
 			return {
-				duration: 500,
-				offset: 250,
-				easing: "linear",
+				duration: 800,
+				offset: 0,
+				easing: "easeInCubic",
 			}
 		},
 	},
