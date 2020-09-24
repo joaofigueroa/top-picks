@@ -133,11 +133,6 @@ export default {
 			return this.$store.getters.search
 		},
 
-		target() {
-			const value = this[this.type]
-			if (!isNaN(value)) return Number(value)
-			else return value
-		},
 		options() {
 			return {
 				duration: 800,
