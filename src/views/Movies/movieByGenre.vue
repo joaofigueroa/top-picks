@@ -7,6 +7,7 @@
 					:query="require('@/graphql/Movies/GetMoviesByGenre.gql')"
 					:variables="{
 						name: $route.params.name,
+						offset,
 					}"
 				>
 					<template v-slot="{ result: { loading, error, data } }">
@@ -28,6 +29,15 @@
 
 								<v-col v-for="movie in data.Genre[0].movies" :key="movie.id" cols="6" md="3">
 									<MovieCard :movie="movie"></MovieCard>
+								</v-col>
+								<v-col class="d-flex justify-center mx-2" cols="12">
+									<v-btn rounded outlined class="mx-2" color="primay" @click="previousPage">
+										Página Anterior
+									</v-btn>
+									<v-spacer></v-spacer>
+									<v-btn rounded outlined class="mx-2" color="primay" @click="nextPage">
+										Página Seguinte
+									</v-btn>
 								</v-col>
 							</v-row>
 						</div>
@@ -108,13 +118,44 @@
 </template>
 <script>
 import MovieCard from "@/components/Movies/card"
+import goTo from "vuetify/es5/services/goto"
 export default {
+	data: () => ({
+		offset: 0,
+	}),
+
 	components: {
 		MovieCard,
 	},
+
 	computed: {
 		search() {
 			return this.$store.getters.search
+		},
+
+		target() {
+			const value = this[this.type]
+			if (!isNaN(value)) return Number(value)
+			else return value
+		},
+		options() {
+			return {
+				duration: 500,
+				offset: 250,
+				easing: "linear",
+			}
+		},
+	},
+
+	methods: {
+		previousPage() {
+			goTo(0, this.options)
+			this.offset > 0 ? (this.offset -= 20) : ""
+		},
+
+		nextPage() {
+			goTo(0, this.options)
+			this.offset += 20
 		},
 	},
 }
